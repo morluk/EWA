@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" type="text/css" href="default.css" />
+<meta name="description" content="Pizzabestellung" />
+<meta name="author" content="M.Hilberg" />
+<meta name="keywords" content="Pizza,Bestellung" />
+<meta name="robots" content="noindex" />
+<title>Pizzaservice</title>
+</head>
+<body>
+	<h1>Bestellung</h1>
+	<article class="speisekarte">
+		<table>
+			<tr class="hidden">
+				<th>Bild</th>
+				<th>Beschreibung</th>
+				<th>Preis</th>
+			</tr>
+			<tr>
+				<td><img src="images/pizza.jpg" width="150" height="150" alt=""
+					title="Pizza" /></td>
+				<td>Margherita</td>
+				<td>4,00 €</td>
+			</tr>
+			<tr>
+				<td><img src="images/pizza.jpg" width="150" height="150" alt=""
+					title="Pizza" /></td>
+				<td>Salami</td>
+				<td>4,50 €</td>
+			</tr>
+			<tr>
+				<td><img src="images/pizza.jpg" width="150" height="150" alt=""
+					title="Pizza" /></td>
+				<td>Hawaii</td>
+				<td>5,50 €</td>
+			</tr>
+		</table>
+	</article>
+	<article class="warenkorb">
+		<form action="http://www.fbi.h-da.de/cgi-bin/Echo.pl"
+			accept-charset="UTF-8" method="get">
+			<div class="textbox">
+				<select name="top4[]" size="5" multiple>
+					<option>test</option>
+				</select>
+			</div>
+			<p class="bestellung">
+				<span id="preis">15,70</span> €
+			</p>
+			<div class="adress">
+				<input type="text" name="kunde" value="" size="30" maxlength="40" />
+			</div>
+			<div class="button1">
+				<input type="reset" name="Alle löschen" value="Alle löschen" />
+			</div>
+			<div class="button2">
+				<input type="button" name="Auswahl löschen" value="Auswahl löschen" />
+				<input type="submit" name="Bestellen" value="Bestellen" />
+			</div>
+		</form>
+	</article>
+</body>
+</html>

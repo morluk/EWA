@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" type="text/css" href="default.css" />
+<meta name="description" content="Pizzabestellung" />
+<meta name="author" content="M.Hilberg" />
+<meta name="keywords" content="Pizza,Bestellung" />
+<meta name="robots" content="noindex" />
+<title>Fahrer</title>
+</head>
+<body>
+	<h1>Fahrer</h1>
+	<article class="fahrer">
+		<h2>Müller, Freßgasse 11, 65000 Frankfurt</h2>
+		<p>Tonno, Calzone, Margherita, Hawaii, Tonno</p>
+		<p>
+			Preis: <span id="preis">13,00</span> €
+		</p>
+		<form action="http://www.fbi.h-da.de/cgi-bin/Echo.pl"
+			accept-charset="UTF-8" method="get">
+			<table>
+				<tr>
+					<th>gebacken</th>
+					<th>unterwegs</th>
+					<th>ausgeliefert</th>
+				</tr>
+				<tr>
+
+					<td class="status"><input type="radio" name="OK" value="2"
+						onclick="document.forms['formid'].submit();" /></td>
+					<td class="status"><input type="radio" name="OK" value="3"
+						onclick="document.forms['formid'].submit();" /></td>
+					<td class="status"><input type="radio" name="OK" value="4"
+						onclick="document.forms['formid'].submit();" /></td>
+
+				</tr>
+			</table>
+		</form>
+	</article>
+	<article class="fahrer">
+		<h2>Meier, Hauptstr. 5</h2>
+		<p>Tonno, Tonno, Margherita</p>
+		<p>
+			Preis: <span>10,50</span> €
+		</p>
+		<form action="http://www.fbi.h-da.de/cgi-bin/Echo.pl"
+			accept-charset="UTF-8" method="get">
+			<table>
+				<tr>
+					<th>gebacken</th>
+					<th>unterwegs</th>
+					<th>ausgeliefert</th>
+				</tr>
+				<tr>
+
+					<td class="status"><input type="radio" name="OK" value="2"
+						onclick="document.forms['formid'].submit();" /></td>
+					<td class="status"><input type="radio" name="OK" value="3"
+						onclick="document.forms['formid'].submit();" /></td>
+					<td class="status"><input type="radio" name="OK" value="4"
+						onclick="document.forms['formid'].submit();" /></td>
+
+				</tr>
+			</table>
+		</form>
+	</article>
+</body>
+</html>
