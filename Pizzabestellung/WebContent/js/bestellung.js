@@ -1,3 +1,6 @@
+/**
+ * Wird nicht benutzt!!
+ */
 var warenkorb;
 
 function Warenkorb() {

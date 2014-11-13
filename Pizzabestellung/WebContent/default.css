@@ -26,6 +26,15 @@ li {
   width:8em;
   text-align:center;
 }
+li.ButtonNormal {
+  background-color:lightgray;
+}
+li.ButtonOver {
+  background-color:lightblue;	
+}
+li.ButtonDown {
+  background-color:gray;	
+}
 ul {
   list-style:none; 
   display:inline-block; 
@@ -46,7 +55,7 @@ a:active {
   color:red;
 }
 a:hover {
-  color:green;
+  color:red;
 }
 a:focus {
   color:black;
@@ -62,6 +71,8 @@ h2 {
 p {
   margin:1em;
 }  
+article {
+}
 
 /* spezielle Abschnittformatierung */
 /* bestellung.html */

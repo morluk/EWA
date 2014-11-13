@@ -9,7 +9,7 @@
     <meta name="robots" content="noindex" />
     <title>Kunde</title>
   </head>
-  <body>
+  <body onload="window.setInterval('refresh()', 2*1000);">
     <h1>Kunde</h1>
     <form id="formid" action="http://www.fbi.h-da.de/cgi-bin/Echo.pl" accept-charset="UTF-8" method="get">
       <table>
@@ -70,8 +70,10 @@
       </form>
       <footer>
 	<ul>
-	  <li><a href="bestellung.html">Neue Bestellung</a></li>
+	  <li class="ButtonNormal" onmouseover="Mouseover(this);"
+			onmouseout="Mouseout(this);" onmousedown="Mousedown(this);"><a href="bestellung.html">Neue Bestellung</a></li>
 	</ul>
       </footer>
+   <script type="text/javascript" src="js/mouseover.js"></script>
   </body>
 </html>
