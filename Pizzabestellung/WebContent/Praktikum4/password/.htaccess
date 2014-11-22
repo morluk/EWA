@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Bitte Passwort eingeben"
+AuthUserFile /home/moritz/rep/EWA/Pizzabestellung/WebContent/Praktikum4/user/pwdfile
+Require valid-user
