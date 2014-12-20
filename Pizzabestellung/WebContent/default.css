@@ -79,6 +79,9 @@ article {
 tr.hidden {
   visibility: collapse;
 }
+th.hidden, td.hidden {
+  visibility: hidden;
+}
 p.bestellung {
   margin:1em 0em 1em 1em;
   text-align:right;

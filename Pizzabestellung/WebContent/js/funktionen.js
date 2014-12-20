@@ -42,8 +42,8 @@ function Warenkorb(idSelect, idPrice) {
 		}
 	};
 	// public: fügt item zu item liste hinzu
-	this.add = function(new_id, new_price, new_name) {
-		var new_item = {id: new_id, price: Number(new_price), name: new_name};
+	this.add = function(new_price, new_name) {
+		var new_item = {name: new_name, price: Number(new_price)};
 		itemArray[itemArray.length] = new_item;
 		totalPrice += Number(new_price);
 		updateView();
@@ -89,7 +89,6 @@ function init() {
 function add(node) {
 	"use strict";
 	var price = node.getAttribute("data-price");
-	var id = node.getAttribute("data-id");
 	var name = node.getAttribute("data-name");
-	warenkorb.add(id, price, name);
+	warenkorb.add(price, name);
 }
