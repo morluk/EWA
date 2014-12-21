@@ -6,11 +6,10 @@
 function Warenkorb(idSelect, idPrice) {
 	"use strict";
 	// private member
-	var m_nodeSelect = idSelect;
-	var m_nodePrice = idPrice;
-	var itemArray = [];
-	var totalPrice = 0.0;
-	var i = 0;
+	var m_nodeSelect = idSelect,
+		m_nodePrice = idPrice,
+		itemArray = [],
+		totalPrice = 0.0;
 
 	// methoden
 	// private: erneuert textbox und preis
@@ -21,9 +20,12 @@ function Warenkorb(idSelect, idPrice) {
 			liste.removeChild(liste.firstChild);
 		}
 		// Liste fuellen
-		for (i = 0; i < itemArray.length; ++i) {
-			var neuesElement = document.createElement("option");
-			var neuerText = document.createTextNode(itemArray[i].name);
+		var i = 0,
+			neuesElement,
+			neuerText;
+		for (i = 0; i < itemArray.length; i++) {
+			neuesElement = document.createElement("option");
+			neuerText = document.createTextNode(itemArray[i].name);
 			neuesElement.appendChild(neuerText);
 			liste.appendChild(neuesElement);
 		}
@@ -33,7 +35,8 @@ function Warenkorb(idSelect, idPrice) {
 	};
 	// private: löscht item mit name aus liste
 	var remove = function(name) {
-		for (i=0;i<itemArray.length;++i) {
+		var i = 0;
+		for (i=0;i<itemArray.length;i++) {
 			if (itemArray[i].name === name) {
 				totalPrice -= itemArray[i].price;
 				itemArray.splice(i, 1);
@@ -56,18 +59,21 @@ function Warenkorb(idSelect, idPrice) {
 	};
 	// public: löscht selektierte Items
 	this.removeSelected = function() {
-		var liste = document.getElementById(m_nodeSelect);
-		for (i=0; i<liste.options.length; ++i) {
+		var liste = document.getElementById(m_nodeSelect),
+			i = 0,
+			name;
+		for (i=0; i<liste.options.length; i++) {
 			if (liste.options[i].selected) {
-				var name = liste.options[i].text;
+				name = liste.options[i].text;
 				remove(name);
 			}
 		}
 		updateView();
 	};
 	// public: selektiert alle items bevor Warenkorb abgeschickt wird
-	this.submit = function() {
-		var options = document.getElementById(m_nodeSelect).options;
+	this.selectAll = function() {
+		var options = document.getElementById(m_nodeSelect).options,
+			i = 0;
 		for (i=0; i<options.length; ++i) {
 			options[i].selected = "1";
 		}
@@ -88,7 +94,7 @@ function init() {
 // bei click auf pizza in Speisekarte
 function add(node) {
 	"use strict";
-	var price = node.getAttribute("data-price");
-	var name = node.getAttribute("data-name");
+	var price = node.getAttribute("data-price"),
+		name = node.getAttribute("data-name");
 	warenkorb.add(price, name);
 }

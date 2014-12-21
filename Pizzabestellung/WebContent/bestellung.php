@@ -70,7 +70,7 @@ HERE;
 		</table>
 		</article>
 		<article class="warenkorb">
-			<form action="http://localhost/ewaTest/status.php"
+			<form action="http://localhost/ewa/status.php"
 				accept-charset="UTF-8" method="post">
 				<div class="textbox">
 					<select id="selectBox" name="PizzaName[]" size="5" multiple>
@@ -81,14 +81,14 @@ HERE;
 					<span id="preis">15,70</span> €
 				</p>
 				<div class="adress">
-					<input type="text" name="Adresse" value="" size="30" maxlength="40" />
+					<input type="text" name="Adresse" value="" size="30" maxlength="40" required />
 				</div>
 				<div class="button1">
 					<input onclick="warenkorb.clear();" type="reset" name="Alle löschen" value="Alle löschen" />
 				</div>
 				<div class="button2">
 					<input onclick="warenkorb.removeSelected()" type="button" name="Auswahl löschen" value="Auswahl löschen" />
-					<input onclick="warenkorb.submit()" type="submit" name="Bestellen" value="Bestellen" />
+					<input onclick="warenkorb.selectAll()" type="submit" name="Bestellen" value="Bestellen" />
 				</div>
 			</form>
 		</article>
