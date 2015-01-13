@@ -72,19 +72,21 @@ class PageTemplate extends Page {
 	 * @return none
 	 */
 	protected function getViewData() {
-		$this->pizzaNameArray [0] = "Margherita";
-		$this->pizzaStatusArray [0] = "0";
-		
-		$this->pizzaNameArray [1] = "Salami";
-		$this->pizzaStatusArray [1] = "1";
-		
-		$this->pizzaNameArray [2] = "Schinken";
-		$this->pizzaStatusArray [2] = "2";
-		
-		$this->pizzaNameArray [3] = "Peperoni";
-		$this->pizzaStatusArray [3] = "3";
-		
-		$this->counter = 4;
+		$this->counter = 0;
+		if (isset ( $_SESSION ['bestellungId'] )) {
+			$bestellungId = $_SESSION ['bestellungId'];
+			try {
+				$Recordset = $this->_database->query ( "select * from bestelltePizza
+						where fBestellungId=$bestellungId" );
+				while ( $Record = $Recordset->fetch_assoc () ) {
+					$this->pizzaNameArray [$this->counter] = $Record ['fPizzaName'];
+					$this->pizzaStatusArray [$this->counter] = $Record ['status'];
+					$this->counter ++;
+				}
+			} catch ( Exception $e ) {
+				echo $e->getMessage ();
+			}
+		}
 	}
 	
 	/**
@@ -103,7 +105,9 @@ class PageTemplate extends Page {
 		
 		echo "<h1>Baecker</h1>";
 		
-		echo <<<EOT
+		if (isset ( $_SESSION ['bestellungId'] )) {
+			
+			echo <<<EOT
 		<table>
 			<tr>
 				<th></th>
@@ -113,24 +117,27 @@ class PageTemplate extends Page {
 				<th>unterwegs</th>
 			</tr>
 EOT;
-		
-		for($i = 0; $i < $this->counter; $i ++) {
-			echo '<tr>';
 			
-			echo '<td>';
-			echo $this->pizzaNameArray [$i];
-			echo '</td>';
-			
-			for($p = 0; $p < 4; $p ++) {
-				echo '<td class="status">';
-				echo '<input type="radio" ';
+			for($i = 0; $i < $this->counter; $i ++) {
+				echo '<tr>';
 				
-				if ($this->pizzaStatusArray [$i] == $p) {
-					echo 'checked="checked"';
+				echo '<td>';
+				echo $this->pizzaNameArray [$i];
+				echo '</td>';
+				
+				for($p = 0; $p < 4; $p ++) {
+					echo '<td class="status">';
+					echo '<input type="radio" ';
+					
+					if ($this->pizzaStatusArray [$i] == $p) {
+						echo 'checked="checked"';
+					}
+					
+					echo 'disabled /></td>';
 				}
-				
-				echo 'disabled /></td>';
 			}
+		} else {
+			echo "Keine Pizza bestellt";
 		}
 		
 		$this->generatePageFooter ();
@@ -155,11 +162,16 @@ EOT;
 	protected function saveData() {
 		$date = date ( "Y-m-d H:i:s" );
 		$kunde = $_POST ['kunde'];
+		$pizzas = $_POST ['pizzaSelectionArray'];
 		try {
 			$this->_database->query ( "insert into bestellung(adresse, bestellzeitpunkt)
-		values ('$kunde', '$date')" );
+				values ('$kunde', '$date')" );
 			$lastId = $this->_database->insert_id;
-			//TODO: alle pizzen einfuegen
+			$_SESSION ['bestellungId'] = $lastId;
+			for($i = 0; $i < count ( $pizzas ); $i ++) {
+				$this->_database->query ( "insert into bestelltePizza(fBestellungId, fPizzaName, status)
+						values ('$lastId', '$pizzas[$i]', 0)" );
+			}
 		} catch ( Exception $e ) {
 			echo $e->getMessage ();
 		}

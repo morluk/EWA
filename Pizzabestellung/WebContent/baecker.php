@@ -70,19 +70,18 @@ class PageTemplate extends Page {
 	 * @return none
 	 */
 	protected function getViewData() {
-		$this->pizzaIdArray [0] = "101";
-		$this->pizzaNameArray [0] = "Margherita";
-		$this->pizzaStatusArray [0] = "0";
-		
-		$this->pizzaIdArray [1] = "102";
-		$this->pizzaNameArray [1] = "Salami";
-		$this->pizzaStatusArray [1] = "1";
-		
-		$this->pizzaIdArray [2] = "103";
-		$this->pizzaNameArray [2] = "Schinken";
-		$this->pizzaStatusArray [2] = "2";
-		
-		$this->counter = 3;
+		$this->counter = 0;
+		try {
+			$Recordset = $this->_database->query ( "select * from bestelltePizza" );
+			while ( $Record = $Recordset->fetch_assoc () ) {
+				$this->pizzaIdArray [$this->counter] = $Record ['pizzaId'];
+				$this->pizzaNameArray [$this->counter] = $Record ['fPizzaName'];
+				$this->pizzaStatusArray [$this->counter] = $Record ['status'];
+				$this->counter ++;
+			}
+		} catch ( Exception $e ) {
+			echo $e->getMessage ();
+		}
 	}
 	
 	/**
@@ -105,7 +104,7 @@ class PageTemplate extends Page {
 			echo '<form id="formid';
 			echo $i;
 			echo '" action="http://www.fbi.h-da.de/cgi-bin/Echo.pl"';
-			echo 'accept-charset="UTF-8" method="get">';
+			echo 'accept-charset="UTF-8" method="post">';
 			echo '</form>';
 		}
 		
@@ -198,7 +197,7 @@ EOT;
 // That is input is processed and output is created.
 PageTemplate::main ();
 
-if ($_GET[besteklllung] == 1) {
+if ($_GET [besteklllung] == 1) {
 }
 
 // Zend standard does not like closing php-tag!

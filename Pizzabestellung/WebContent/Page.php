@@ -50,6 +50,7 @@ abstract class Page {
 	 * @return none
 	 */
 	protected function __construct() {
+		session_start();
 		error_reporting ( E_ALL );
 		require_once './pwd.php';
 		try {
