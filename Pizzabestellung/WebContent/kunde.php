@@ -148,7 +148,22 @@ EOT;
 	 */
 	protected function processReceivedData() {
 		parent::processReceivedData ();
-		// to do: call processReceivedData() for all members
+		if (isset ( $_POST [pizzaSelectionArray] )) {
+			$this->saveData ();
+		}
+	}
+	protected function saveData() {
+		$date = date ( "Y-m-d H:i:s" );
+		$kunde = $_POST ['kunde'];
+		try {
+			$this->_database->query ( "insert into bestellung(adresse, bestellzeitpunkt)
+		values ('$kunde', '$date')" );
+			$lastId = $this->_database->insert_id;
+			//TODO: alle pizzen einfuegen
+		} catch ( Exception $e ) {
+			echo $e->getMessage ();
+		}
+		// $this->_database->query ( "Commit;" );
 	}
 	
 	/**

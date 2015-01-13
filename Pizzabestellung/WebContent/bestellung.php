@@ -69,20 +69,34 @@ class PageTemplate extends Page {
 	 *
 	 * @return none
 	 */
+	// protected function getViewData() {
+	// $this->pizzaNameArray [0] = "Margherita";
+	// $this->pizzaPriceArray [0] = "4.5";
+	// $this->pizzaPictureArray [0] = "images/pizza.jpg";
+	
+	// $this->pizzaNameArray [1] = "Salami";
+	// $this->pizzaPriceArray [1] = "5.0";
+	// $this->pizzaPictureArray [1] = "images/pizza.jpg";
+	
+	// $this->pizzaNameArray [2] = "Schinken";
+	// $this->pizzaPriceArray [2] = "5.5";
+	// $this->pizzaPictureArray [2] = "images/pizza.jpg";
+	
+	// $this->counter = 3;
+	// }
 	protected function getViewData() {
-		$this->pizzaNameArray [0] = "Margherita";
-		$this->pizzaPriceArray [0] = "4.5";
-		$this->pizzaPictureArray [0] = "images/pizza.jpg";
-		
-		$this->pizzaNameArray [1] = "Salami";
-		$this->pizzaPriceArray [1] = "5.0";
-		$this->pizzaPictureArray [1] = "images/pizza.jpg";
-		
-		$this->pizzaNameArray [2] = "Schinken";
-		$this->pizzaPriceArray [2] = "5.5";
-		$this->pizzaPictureArray [2] = "images/pizza.jpg";
-		
-		$this->counter = 3;
+		$this->counter = 0;
+		try {
+			$Recordset = $this->_database->query ( 'select * from angebot' );
+			while ( $Record = $Recordset->fetch_assoc () ) {
+				$this->pizzaNameArray [$this->counter] = $Record ['pizzaName'];
+				$this->pizzaPriceArray [$this->counter] = $Record ['preis'];
+				$this->pizzaPictureArray [$this->counter] = $Record ['bilddatei'];
+				$this->counter ++;
+			}
+		} catch ( Exception $e ) {
+			echo $e->getMessage ();
+		}
 	}
 	
 	/**
@@ -113,25 +127,27 @@ EOT;
 		
 		for($i = 0; $i < $this->counter; $i ++) {
 			echo '<tr>';
-			echo '<td onclick="add(this)" ';
+			echo '<td onclick="warenkorb.add(\'' . $this->pizzaNameArray [$i];
+			echo '\', ' . $this->pizzaPriceArray [$i] . ')" ';
 			echo 'data-id="1" data-price="';
-			echo $this->pizzaPriceArray[$i];
+			echo $this->pizzaPriceArray [$i];
 			echo '" ';
 			echo 'data-name="';
-			echo $this->pizzaNameArray[$i];
+			echo $this->pizzaNameArray [$i];
 			echo '">';
 			
 			echo '<img src="';
-			echo $this->pizzaPictureArray[$i];
+			echo $this->pizzaPictureArray [$i];
 			echo '" ';
 			echo 'width="150" ';
 			echo 'height="150" ';
 			echo 'alt="" ';
-			echo 'title="Pizza" />';
+			echo 'title="Pizza" ';
+			echo '/>';
 			echo '</td>';
-			echo '<td>Margherita</td>';
+			echo '<td>' . $this->pizzaNameArray [$i] . '</td>';
 			echo '<td>';
-			echo $this->pizzaPriceArray[$i];
+			echo $this->pizzaPriceArray [$i];
 			echo ' €</td>';
 			echo '</tr>';
 		}
@@ -140,34 +156,38 @@ EOT;
 		echo '</article>';
 		
 		echo <<<EOT
-				<article class="warenkorb">
-			<form action="http://www.fbi.h-da.de/cgi-bin/Echo.pl"
-				accept-charset="UTF-8" method="post">
-				<div class="textbox">
-					<select id="selectBox" name="top4[]" size="5" multiple>
-						<option>test</option>
-					</select>
-				</div>
-				<p class="bestellung">
-					<span id="preis">15,70</span> €
-				</p>
-				<div class="adress">
-					<input type="text" name="kunde" value="" size="30" maxlength="40" />
-				</div>
-				<div class="button1">
-					<input onclick="warenkorb.clear();" type="reset" name="Alle löschen" value="Alle löschen" />
-				</div>
-				<div class="button2">
-					<input onclick="warenkorb.removeSelected()" type="button" name="Auswahl löschen" value="Auswahl löschen" />
-					<input onclick="warenkorb.submit()" type="submit" name="Bestellen" value="Bestellen" />
-				</div>
-			</form>
-		</article>
-		<!-- Script Einbinden -->
-		<script type="text/javascript" src="js/funktionen.js"> </script>
-		<noscript>
-		<p>Bitte aktivieren Sie JavaScript !</p>
-		</noscript>	
+			<article class="warenkorb">
+				<form action="kunde.php"
+					accept-charset="UTF-8" method="post">
+					<div class="textbox">
+						<select id="pizzaSelection" name="pizzaSelectionArray[]" size="5"
+							multiple>
+						</select>
+					</div>
+					<p class="bestellung">
+						<span id="preis">0</span> €
+					</p>
+					<div class="adress">
+						<input type="text" name="kunde" value="" size="30" maxlength="40" />
+					</div>
+					<div class="button1">
+						<input type="reset" name="deleteAll" value="Alle löschen"
+							onclick="warenkorb.deleteAll()" />
+					</div>
+					<div class="button2">
+						<input type="button" name="deleteSelected" value="Auswahl löschen"
+							onclick="warenkorb.deleteSelected()" /> 
+						<input onclick="warenkorb.selectAll()" type="submit" name="Bestellen" 
+							value="Bestellen" />
+					</div>
+				</form>
+			</article>
+			<script>
+				init()
+			</script>
+			<noscript>
+			<p>Bitte aktivieren Sie JavaScript !</p>
+			</noscript>	
 EOT;
 		
 		$this->generatePageFooter ();

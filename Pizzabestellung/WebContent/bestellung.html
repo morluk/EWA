@@ -19,20 +19,23 @@
 				<th>Preis</th>
 			</tr>
 			<tr>
-				<td onclick="add(this)" data-id="1" data-price="4.0" data-name="Margherita"><img src="images/pizza.jpg" width="150" height="150" alt=""
-					title="Pizza" /></td>
+				<td onclick="add(this)" data-id="1" data-price="4.0"
+					data-name="Margherita"><img src="images/pizza.jpg" width="150"
+					height="150" alt="" title="Pizza" /></td>
 				<td>Margherita</td>
 				<td>4,00 €</td>
 			</tr>
 			<tr>
-				<td onclick="add(this)" data-id="2" data-price="4.5" data-name="Salami"><img src="images/pizza.jpg" width="150" height="150" alt=""
-					title="Pizza" /></td>
+				<td onclick="add(this)" data-id="2" data-price="4.5"
+					data-name="Salami"><img src="images/pizza.jpg" width="150"
+					height="150" alt="" title="Pizza" /></td>
 				<td>Salami</td>
 				<td>4,50 €</td>
 			</tr>
 			<tr>
-				<td onclick="add(this)" data-id="3" data-price="5.5" data-name="Hawaii"><img src="images/pizza.jpg" width="150" height="150" alt=""
-					title="Pizza" /></td>
+				<td onclick="add(this)" data-id="3" data-price="5.5"
+					data-name="Hawaii"><img src="images/pizza.jpg" width="150"
+					height="150" alt="" title="Pizza" /></td>
 				<td>Hawaii</td>
 				<td>5,50 €</td>
 			</tr>
@@ -40,31 +43,34 @@
 	</article>
 	<article class="warenkorb">
 		<form action="http://www.fbi.h-da.de/cgi-bin/Echo.pl"
-			accept-charset="UTF-8" method="post">
+			accept-charset="UTF-8" method="get">
 			<div class="textbox">
-				<select id="selectBox" name="top4[]" size="5" multiple>
-					<option>test</option>
+				<select id="pizzaSelection" name="pizzaSelection[]" size="5"
+					multiple>
 				</select>
 			</div>
 			<p class="bestellung">
-				<span id="preis">15,70</span> €
+				<span id="preis">0</span> €
 			</p>
 			<div class="adress">
 				<input type="text" name="kunde" value="" size="30" maxlength="40" />
 			</div>
 			<div class="button1">
-				<input onclick="warenkorb.clear();" type="reset" name="Alle löschen" value="Alle löschen" />
+				<input type="reset" name="Alle löschen" value="Alle löschen"
+					onclick="warenkorb.deleteAll()" />
 			</div>
 			<div class="button2">
-				<input onclick="warenkorb.removeSelected()" type="button" name="Auswahl löschen" value="Auswahl löschen" />
-				<input onclick="warenkorb.submit()" type="submit" name="Bestellen" value="Bestellen" />
+				<input type="button" name="Auswahl löschen" value="Auswahl löschen"
+					onclick="warenkorb.deleteSelected()" /> <input type="submit"
+					name="Bestellen" value="Bestellen" />
 			</div>
 		</form>
 	</article>
-	<!-- Script Einbinden -->
-	<script type="text/javascript" src="js/funktionen.js"> </script>
+	<script>
+		init()
+	</script>
 	<noscript>
-	<p>Bitte aktivieren Sie JavaScript !</p>
+		<p>Bitte aktivieren Sie JavaScript !</p>
 	</noscript>
 </body>
 </html>

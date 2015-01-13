@@ -10,10 +10,10 @@ function Warenkorb() {
 	var preisElement = document.getElementById("preis");
 
 	this.add = function(name, preis) {
-		var option = document.createElement("option");
-		option.innerHTML = name;
-		option.setAttribute("data-preis", preis);
-		pizzaSelection.appendChild(option);
+		var neuesElement = document.createElement("option");
+		var neuerText = document.createTextNode(name);
+		neuesElement.appendChild(neuerText);
+		pizzaSelection.appendChild(neuesElement);
 
 		preisElement.innerHTML = parseFloat(preisElement.innerHTML)
 				+ parseFloat(preis);
@@ -35,6 +35,13 @@ function Warenkorb() {
 			option.remove();
 		}
 		pizzaSelection.selectedIndex = firstSelected;
+	}
+
+	this.selectAll = function() {
+		var options = pizzaSelection.options;
+		for (var i = 0; i < options.length; ++i) {
+			options[i].selected = "1";
+		}
 	}
 }
 

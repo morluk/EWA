@@ -50,7 +50,15 @@ abstract class Page {
 	 * @return none
 	 */
 	protected function __construct() {
-		$this->_database = null;
+		error_reporting ( E_ALL );
+		require_once './pwd.php';
+		try {
+			$this->_database = new MySQLi ( $host, $user, $pwd, $database );
+			if (mysqli_connect_errno ())
+				throw new Exception ( "Connect failed: " . mysqli_connect_error () );
+		} catch ( Exception $e ) {
+			echo $e->getMessage ();
+		}
 	}
 	
 	/**
@@ -59,7 +67,11 @@ abstract class Page {
 	 * @return none
 	 */
 	protected function __destruct() {
-		// to do: close database
+		try {
+			$this->_database->close ();
+		} catch ( Exception $e ) {
+			echo $e->getMessage ();
+		}
 	}
 	
 	/**
@@ -83,6 +95,7 @@ abstract class Page {
 			<head>
 			<meta charset="UTF-8" />
 			<link rel="stylesheet" type="text/css" href="default.css" />
+			<script src="js/bestellung.js"></script>
 			<meta name="description" content="Pizzabestellung" />
 			<meta name="keywords" content="Pizza,Bestellung" />
 			<meta name="robots" content="noindex" />
