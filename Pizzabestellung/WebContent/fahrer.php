@@ -74,21 +74,50 @@ class PageTemplate extends Page {
 	 * @return none
 	 */
 	protected function getViewData() {
-		$this->pizzaOrderIdArray [0] = "101";
-		$this->pizzaAdressArray [0] = "teststrasse1";
-		$this->pizzaPizzaArray [0] [0] = "Salami";
-		$this->pizzaPizzaArray [0] [1] = "Schinken";
-		$this->pizzaPriceArray [0] = "10.0";
-		$this->pizzaStatusArray [0] = "0";
-		
-		$this->pizzaOrderIdArray [1] = "102";
-		$this->pizzaAdressArray [1] = "teststrasse2";
-		$this->pizzaPizzaArray [1] [0] = "Salami";
-		$this->pizzaPizzaArray [1] [1] = "Peperoni";
-		$this->pizzaPriceArray [1] = "10.0";
-		$this->pizzaStatusArray [1] = "2";
-		
-		$this->counter = 2;
+		$this->counter = 0;
+		try {
+			$Recordset = $this->_database->query ( "select * from bestellung" );
+			while ( $Record = $Recordset->fetch_assoc () ) {
+				$adresse = $Record ['adresse'];
+				$bestellungId = $Record ['bestellungId'];
+				
+				$Recordset2 = $this->_database->query ( "select 
+						fPizzaName, status, sum(preis) as preisSum
+						from bestelltePizza, angebot
+						where fBestellungId = $bestellungId
+						and pizzaName=fPizzaName" );
+				
+				$i = 0;
+				$show = true;
+				$pizzaNames = array ();
+				$status;
+				while ( $Record2 = $Recordset2->fetch_assoc () ) {
+					$pizzaNames [$i] = $Record2 ['fPizzaName'];
+					if ($Record2 ['status'] == 4 || $Record2 ['status'] < 2) {
+						$show = false;
+					} else if ($Record2 ['status'] == 2) {
+						$status = 0;
+					} else {
+						$status = 1;
+					}
+					$i ++;
+					$preis = $Record2 ['preisSum'];
+				}
+				
+				if ($show == true) {
+					$this->pizzaOrderIdArray [$this->counter] = $bestellungId;
+					$this->pizzaAdressArray [$this->counter] = $adresse;
+					
+					$this->pizzaPizzaArray [$this->counter] = $pizzaNames;
+					
+					$this->pizzaPriceArray [$this->counter] = $preis;
+					$this->pizzaStatusArray [$this->counter] = $status;
+					$this->counter ++;
+				}
+			}
+		} catch ( Exception $e ) {
+			echo $e->getMessage ();
+		}
 	}
 	
 	/**
@@ -104,6 +133,7 @@ class PageTemplate extends Page {
 	protected function generateView() {
 		$this->getViewData ();
 		$this->generatePageHeader ( 'Fahrer' );
+		echo '<meta http-equiv="refresh" content="5; url=fahrer.php" />';
 		
 		echo '<h1>Fahrer</h1>';
 		
@@ -125,8 +155,8 @@ class PageTemplate extends Page {
 			echo '</p>';
 			echo '<form id="formid';
 			echo $i;
-			echo '" action="http://www.fbi.h-da.de/cgi-bin/Echo.pl"';
-			echo 'accept-charset="UTF-8" method="get">';
+			echo '" action="fahrer.php"';
+			echo 'accept-charset="UTF-8" method="post">';
 			echo '<table>';
 			echo '<tr>';
 			echo '<th>gebacken</th>';
@@ -136,9 +166,7 @@ class PageTemplate extends Page {
 			echo '<tr>';
 			
 			for($p = 0; $p < 3; $p ++) {
-				echo '<td class="status"><input type="radio" name="';
-				echo $this->pizzaOrderIdArray [$i];
-				echo '" value="';
+				echo '<td class="status"><input type="radio" name="status" value="';
 				echo $p;
 				echo '"';
 				echo 'onclick="document.forms[\'formid';
@@ -149,7 +177,10 @@ class PageTemplate extends Page {
 					echo 'checked = "checked" ';
 				}
 				
-				echo '/></td>';
+				echo '/>';
+				echo '<input type="hidden" name="id" value="' . $this->pizzaOrderIdArray [$i] . '" ';
+				echo 'form="formid' . $i . '" />';
+				echo '</td>';
 			}
 			
 			echo '</tr>';
@@ -173,7 +204,21 @@ class PageTemplate extends Page {
 	 */
 	protected function processReceivedData() {
 		parent::processReceivedData ();
-		// to do: call processReceivedData() for all members
+		if (isset ( $_POST ['id'] )) {
+			$this->saveData ();
+		}
+	}
+	protected function saveData() {
+		$id = $_POST ['id'];
+		$status = $_POST ['status'];
+		$status += 2;
+		try {
+			$Recordset = $this->_database->query ( "update bestelltePizza, bestellung
+					set status='$status' where bestellungId='$id'
+					and bestellungId = fBestellungId" );
+		} catch ( Exception $e ) {
+			echo $e->getMessage ();
+		}
 	}
 	
 	/**

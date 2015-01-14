@@ -74,10 +74,12 @@ class PageTemplate extends Page {
 		try {
 			$Recordset = $this->_database->query ( "select * from bestelltePizza" );
 			while ( $Record = $Recordset->fetch_assoc () ) {
-				$this->pizzaIdArray [$this->counter] = $Record ['pizzaId'];
-				$this->pizzaNameArray [$this->counter] = $Record ['fPizzaName'];
-				$this->pizzaStatusArray [$this->counter] = $Record ['status'];
-				$this->counter ++;
+				if ($Record ['status'] < 3) {
+					$this->pizzaIdArray [$this->counter] = $Record ['pizzaId'];
+					$this->pizzaNameArray [$this->counter] = $Record ['fPizzaName'];
+					$this->pizzaStatusArray [$this->counter] = $Record ['status'];
+					$this->counter ++;
+				}
 			}
 		} catch ( Exception $e ) {
 			echo $e->getMessage ();
@@ -97,13 +99,14 @@ class PageTemplate extends Page {
 	protected function generateView() {
 		$this->getViewData ();
 		$this->generatePageHeader ( "Baecker" );
+		echo '<meta http-equiv="refresh" content="5; url=baecker.php" />';
 		
 		echo "<h1>Baecker</h1>";
 		
 		for($i = 0; $i < $this->counter; $i ++) {
 			echo '<form id="formid';
 			echo $i;
-			echo '" action="http://www.fbi.h-da.de/cgi-bin/Echo.pl"';
+			echo '" action="baecker.php"';
 			echo 'accept-charset="UTF-8" method="post">';
 			echo '</form>';
 		}
@@ -128,9 +131,7 @@ EOT;
 			for($p = 0; $p < 3; $p ++) {
 				echo '<td class="status">';
 				echo '<input type="radio" ';
-				echo 'name="';
-				echo $this->pizzaIdArray [$i];
-				echo '" ';
+				echo 'name="status" ';
 				echo 'value="';
 				echo $p;
 				echo '" ';
@@ -143,7 +144,10 @@ EOT;
 				if ($this->pizzaStatusArray [$i] == $p) {
 					echo 'checked="checked"';
 				}
-				echo '/></td>';
+				echo '/>';
+				echo '<input type="hidden" name="id" value="' . $this->pizzaIdArray [$i] . '" ';
+				echo 'form="formid' . $i . '" />';
+				echo '</td>';
 			}
 			
 			echo '</tr>';
@@ -166,7 +170,19 @@ EOT;
 	 */
 	protected function processReceivedData() {
 		parent::processReceivedData ();
-		// to do: call processReceivedData() for all members
+		if (isset ( $_POST ['id'] )) {
+			$this->saveData ();
+		}
+	}
+	protected function saveData() {
+		$id = $_POST ['id'];
+		$status = $_POST ['status'];
+		try {
+			$Recordset = $this->_database->query ( "update bestelltePizza
+					set status='$status' where pizzaId='$id'" );
+		} catch ( Exception $e ) {
+			echo $e->getMessage ();
+		}
 	}
 	
 	/**

@@ -79,9 +79,11 @@ class PageTemplate extends Page {
 				$Recordset = $this->_database->query ( "select * from bestelltePizza
 						where fBestellungId=$bestellungId" );
 				while ( $Record = $Recordset->fetch_assoc () ) {
-					$this->pizzaNameArray [$this->counter] = $Record ['fPizzaName'];
-					$this->pizzaStatusArray [$this->counter] = $Record ['status'];
-					$this->counter ++;
+					if ($Record ['status'] < 4) {
+						$this->pizzaNameArray [$this->counter] = $Record ['fPizzaName'];
+						$this->pizzaStatusArray [$this->counter] = $Record ['status'];
+						$this->counter ++;
+					}
 				}
 			} catch ( Exception $e ) {
 				echo $e->getMessage ();
@@ -102,8 +104,9 @@ class PageTemplate extends Page {
 	protected function generateView() {
 		$this->getViewData ();
 		$this->generatePageHeader ( 'Kunde' );
+		echo '<meta http-equiv="refresh" content="5; url=kunde.php" />';
 		
-		echo "<h1>Baecker</h1>";
+		echo "<h1>Kunde</h1>";
 		
 		if (isset ( $_SESSION ['bestellungId'] )) {
 			
@@ -155,7 +158,7 @@ EOT;
 	 */
 	protected function processReceivedData() {
 		parent::processReceivedData ();
-		if (isset ( $_POST [pizzaSelectionArray] )) {
+		if (isset ( $_POST ['pizzaSelectionArray'] )) {
 			$this->saveData ();
 		}
 	}
