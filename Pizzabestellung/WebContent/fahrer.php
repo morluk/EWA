@@ -81,11 +81,12 @@ class PageTemplate extends Page {
 				$adresse = $Record ['adresse'];
 				$bestellungId = $Record ['bestellungId'];
 				
-				$Recordset2 = $this->_database->query ( "select 
+				$query = sprintf ( "select 
 						fPizzaName, status, sum(preis) as preisSum
 						from bestelltePizza, angebot
-						where fBestellungId = $bestellungId
-						and pizzaName=fPizzaName" );
+						where fBestellungId = %s
+						and pizzaName=fPizzaName", $this->_database->real_escape_string ( $bestellungId ) );
+				$Recordset2 = $this->_database->query ( $query );
 				
 				$i = 0;
 				$show = true;
@@ -213,9 +214,11 @@ class PageTemplate extends Page {
 		$status = $_POST ['status'];
 		$status += 2;
 		try {
-			$Recordset = $this->_database->query ( "update bestelltePizza, bestellung
-					set status='$status' where bestellungId='$id'
-					and bestellungId = fBestellungId" );
+			
+			$query = sprintf ( "update bestelltePizza, bestellung
+					set status='%s' where bestellungId='%s'
+					and bestellungId = fBestellungId", $this->_database->real_escape_string ( $status ), $this->_database->real_escape_string ( $id ) );
+			$Recordset = $this->_database->query ( $query );
 		} catch ( Exception $e ) {
 			echo $e->getMessage ();
 		}

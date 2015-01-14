@@ -178,8 +178,10 @@ EOT;
 		$id = $_POST ['id'];
 		$status = $_POST ['status'];
 		try {
-			$Recordset = $this->_database->query ( "update bestelltePizza
-					set status='$status' where pizzaId='$id'" );
+			
+			$query = sprintf ( "update bestelltePizza
+					set status='%s' where pizzaId='%s'", $this->_database->real_escape_string ( $status ), $this->_database->real_escape_string ( $id ) );
+			$Recordset = $this->_database->query ( $query );
 		} catch ( Exception $e ) {
 			echo $e->getMessage ();
 		}

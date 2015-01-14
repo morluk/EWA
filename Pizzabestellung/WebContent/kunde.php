@@ -76,8 +76,9 @@ class PageTemplate extends Page {
 		if (isset ( $_SESSION ['bestellungId'] )) {
 			$bestellungId = $_SESSION ['bestellungId'];
 			try {
-				$Recordset = $this->_database->query ( "select * from bestelltePizza
-						where fBestellungId=$bestellungId" );
+				$query = sprintf ( "select * from bestelltePizza
+						where fBestellungId=%s", $this->_database->real_escape_string ( $bestellungId ) );
+				$Recordset = $this->_database->query ( $query );
 				while ( $Record = $Recordset->fetch_assoc () ) {
 					if ($Record ['status'] < 4) {
 						$this->pizzaNameArray [$this->counter] = $Record ['fPizzaName'];
@@ -167,13 +168,15 @@ EOT;
 		$kunde = $_POST ['kunde'];
 		$pizzas = $_POST ['pizzaSelectionArray'];
 		try {
-			$this->_database->query ( "insert into bestellung(adresse, bestellzeitpunkt)
-				values ('$kunde', '$date')" );
+			$query = sprintf ( "insert into bestellung(adresse, bestellzeitpunkt) 
+					values ('%s', '%s')", $this->_database->real_escape_string ( $kunde ), $this->_database->real_escape_string ( $date ) );
+			$this->_database->query ( $query );
 			$lastId = $this->_database->insert_id;
 			$_SESSION ['bestellungId'] = $lastId;
 			for($i = 0; $i < count ( $pizzas ); $i ++) {
-				$this->_database->query ( "insert into bestelltePizza(fBestellungId, fPizzaName, status)
-						values ('$lastId', '$pizzas[$i]', 0)" );
+				$query = sprintf ( "insert into bestelltePizza(fBestellungId, fPizzaName, status)
+						values ('%s', '%s', 0)", $this->_database->real_escape_string ( $lastId ), $this->_database->real_escape_string ( $pizzas [$i] ) );
+				$this->_database->query ( $query );
 			}
 		} catch ( Exception $e ) {
 			echo $e->getMessage ();
